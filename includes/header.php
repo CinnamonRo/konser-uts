@@ -1,3 +1,10 @@
+<?php
+// Start the session only if it hasn't been started yet
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -18,13 +25,16 @@
         </a>
         <!-- nanti bakal diubah pas login-->
         <div class="flex items-center"> <!-- Changed from flex-items to items -->
-            <a href="index.php?page=login" class="text-lg mx-2 text-slate-300 hover:text-white transition-color ease-in-out duration-200">
-                Login
-            </a>
-            <span class="text-slate-300">|</span>
-            <a href="index.php?page=signup" class="text-lg mx-2 text-slate-300 hover:text-white transition-color ease-in-out duration-200">
-                Sign Up
-            </a>
+        <?php
+            if (isset($_SESSION['username'])) {
+                echo '<span class="text-lg mx-2 text-slate-300">' . htmlspecialchars($_SESSION['username']) . '</span>';
+                echo '<a href="logout.php" class="text-lg mx-2 text-slate-300 hover:text-white transition-color ease-in-out duration-200">Sign Out</a>';
+            } else {
+                echo '<a href="index.php?page=login" class="text-lg mx-2 text-slate-300 hover:text-white transition-color ease-in-out duration-200">Login</a>';
+                echo '<span class="text-slate-300">|</span>';
+                echo '<a href="index.php?page=signup" class="text-lg mx-2 text-slate-300 hover:text-white transition-color ease-in-out duration-200">Sign Up</a>';
+            }
+            ?>
         </div>
     </div>
 </body>
