@@ -9,16 +9,19 @@ $error_message = '';
 // Check if the form was submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get the form data
-    $name = $_POST['user_nama'];
-    $email = $_POST['user_email'];
+    $name = trim($_POST['user_nama']);
+    $email = trim($_POST['user_email']);
     $password = $_POST['user_password'];
     $repassword = $_POST['user_repassword'];
+    $role = "user";
 
     // Validate form data
     if (empty($name) || empty($email) || empty($password) || empty($repassword)) {
         $error_message = "All fields are required!";
     } elseif ($password !== $repassword) {
         $error_message = "Passwords do not match!";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_message = "Invalid email format!";
     } else {
         // Hash the password for security
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -45,8 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $error_message = "Email is already registered!";
             } else {
                 // Function to check if user_id exists
-                function idExists($conn, $id)
-                {
+                function idExists($conn, $id) {
                     $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE user_id = ?");
                     $stmt->execute([$id]);
                     return $stmt->fetchColumn() > 0;
@@ -65,18 +67,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 // Prepare the SQL query for insertion
-                $sql = "INSERT INTO users (user_id, user_nama, user_email, user_password) 
-                    VALUES (:user_id, :user_nama, :user_email, :user_password)";
+                $sql = "INSERT INTO users (user_id, user_nama, user_email, user_password, role, image) 
+                VALUES (:user_id, :user_nama, :user_email, :user_password, :user_role, :user_image)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':user_id', $user_id);
                 $stmt->bindParam(':user_nama', $name);
                 $stmt->bindParam(':user_email', $email);
                 $stmt->bindParam(':user_password', $hashedPassword);
+                $stmt->bindParam(':user_role', $role);
+
+                // Insert a blank image initially
+                $image = '';
+                $stmt->bindParam(':user_image', $image);
 
                 // Execute the query and check if it was successful
                 if ($stmt->execute()) {
                     $success_message = "User registered successfully with ID: $user_id";
-                    header("Location: index.php?page=login");  // Redirect to login page
+                    // Redirect to the login page after successful registration
+                    header("Location: index.php?page=login");
                     exit();  // Stop further script execution
                 } else {
                     $error_message = "There was an error registering the user";

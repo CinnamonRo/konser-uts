@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../assets/styles/input.css" rel="stylesheet">
+    <link href="./assets/styles/input.css" rel="stylesheet">
     <title>Your Title Here</title> <!-- Add a title to your document -->
 </head>
 
@@ -12,8 +12,8 @@
     <div class="flex z-10 top-0 flex-items justify-between items-center py-4 px-6 bg-dark-teal sticky">
         <a href="index.php?page=home">
             <div class="flex items-center flex-shrink-0 text-slate-300 mr-6">
-                <img src="../assets/images/logo.png" alt="logo" class="mr-2" />
-                <span class="font-semibold text-xl tracking-tight">Nama</span>
+                <img src="./assets/images/logo.png" alt="logo" class="mr-2 h-12 w-12" />
+                <span class="font-semibold text-xl tracking-tight">Happies</span>
             </div>
         </a>
         <!-- nanti bakal diubah pas login-->
