@@ -12,7 +12,7 @@
     <div class="flex z-10 top-0 flex-items justify-between items-center py-4 px-6 bg-dark-teal sticky">
         <a href="index.php?page=home">
             <div class="flex items-center flex-shrink-0 text-slate-300 mr-6">
-                <img src="#" alt="logo" class="mr-2" />
+                <img src="../assets/images/logo.png" alt="logo" class="mr-2" />
                 <span class="font-semibold text-xl tracking-tight">Nama</span>
             </div>
         </a>

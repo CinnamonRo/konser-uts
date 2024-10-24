@@ -27,6 +27,8 @@
     } else {
         require $base_path . '404.php'; // Load the 404 error page if the file doesn't exist
     }
+
+    require './includes/footer.php';
     ?>
 </body>
 

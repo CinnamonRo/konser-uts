@@ -1,3 +1,44 @@
+<?php
+require_once './includes/dbConnect.php';
+
+// Initialize messages
+$success_message = '';
+$error_message = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    if (empty($username) || empty($password)) {
+        $error_message = "All fields are required!";
+    } else {
+        $db = new DbConnect();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT * FROM users WHERE user_nama = :user_nama");
+        $stmt->bindParam(':user_nama', $username);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($stmt->rowCount() > 0) {
+            if (password_verify($password, $user['user_password'])) {
+                session_start();
+
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['user_nama'] = $user['user_nama'];
+                $_SESSION['user_email'] = $user['user_email'];
+                $_SESSION['user_role'] = $user['user_role'];
+
+                header('Location: index.php?page=home');
+            } else {
+                $error_message = "Invalid username or password!";
+            }
+        } else {
+            $error_message = "Invalid username or password!";
+        }
+    }
+}
+?>
 <!doctype html>
 <html lang="en">
 
@@ -9,8 +50,8 @@
 </head>
 
 <body>
-    <div class="min-w-screen min-h-screen flex items-center justify-center">
-        <div class="w-full max-w-xs">
+    <div class="min-w-screen flex items-center justify-center">
+        <div class="w-full max-w-xs ">
             <form class="shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-light-teal">
                 <p class="text-center text-white text-lg font-bold">Login</p>
                 <div class="mb-3">
